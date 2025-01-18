@@ -33,9 +33,9 @@ public class Mk4iSwerveModule {
   private SwerveModuleState m_desiredState = new SwerveModuleState(0.0, new Rotation2d());
 
   /**
-   * Constructs a MAXSwerveModule and configures the driving and turning motor,
+   * Constructs a Mk4iSwerveModule and configures the driving and turning motor,
    * encoder, and PID controller. This configuration is specific to the REV
-   * MAXSwerve Module built with NEOs, SPARKS MAX, and a Through Bore
+   * Mk4iSwerve Module built with NEOs, SPARKS MAX, and a Through Bore
    * Encoder.
    */
   public Mk4iSwerveModule(int drivingCANId, int turningCANId, double chassisAngularOffset) {
@@ -72,7 +72,7 @@ public class Mk4iSwerveModule {
     return new SwerveModuleState(m_drivingEncoder.getVelocity(),
         new Rotation2d(m_turningEncoder.getPosition() - m_chassisAngularOffset));
   }
-
+ 
   /**
    * Returns the current position of the module.
    *
