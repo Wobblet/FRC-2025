@@ -2,10 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+
 package frc.robot.subsystems;
+
 
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
+
+
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,6 +23,7 @@ import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+
 public class DriveSubsystem extends SubsystemBase {
   // Create MAXSwerveModules
   private final Mk4iSwerveModule m_frontLeft = new Mk4iSwerveModule(
@@ -26,23 +31,28 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kFrontLeftTurningCanId,
       DriveConstants.kFrontLeftChassisAngularOffset);
 
+
   private final Mk4iSwerveModule m_frontRight = new Mk4iSwerveModule(
       DriveConstants.kFrontRightDrivingCanId,
       DriveConstants.kFrontRightTurningCanId,
       DriveConstants.kFrontRightChassisAngularOffset);
+
 
   private final Mk4iSwerveModule m_rearLeft = new Mk4iSwerveModule(
       DriveConstants.kRearLeftDrivingCanId,
       DriveConstants.kRearLeftTurningCanId,
       DriveConstants.kBackLeftChassisAngularOffset);
 
+
   private final Mk4iSwerveModule m_rearRight = new Mk4iSwerveModule(
       DriveConstants.kRearRightDrivingCanId,
       DriveConstants.kRearRightTurningCanId,
       DriveConstants.kBackRightChassisAngularOffset);
 
+
   // The gyro sensor
   private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
+
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
@@ -55,11 +65,13 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearRight.getPosition()
       });
 
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     // Usage reporting for MAXSwerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_MaxSwerve);
   }
+
 
   @Override
   public void periodic() {
@@ -74,6 +86,7 @@ public class DriveSubsystem extends SubsystemBase {
         });
   }
 
+
   /**
    * Returns the currently-estimated pose of the robot.
    *
@@ -82,6 +95,7 @@ public class DriveSubsystem extends SubsystemBase {
   public Pose2d getPose() {
     return m_odometry.getPoseMeters();
   }
+
 
   /**
    * Resets the odometry to the specified pose.
@@ -100,6 +114,15 @@ public class DriveSubsystem extends SubsystemBase {
         pose);
   }
 
+
+  public void resetAllEncoders(){
+    m_frontLeft.resetEncoders();
+    m_frontRight.resetEncoders();
+    m_rearLeft.resetEncoders();
+    m_rearRight.resetEncoders();
+  }
+
+
   /**
    * Method to drive the robot using joystick info.
    *
@@ -115,6 +138,7 @@ public class DriveSubsystem extends SubsystemBase {
     double ySpeedDelivered = ySpeed * DriveConstants.kMaxSpeedMetersPerSecond;
     double rotDelivered = rot * DriveConstants.kMaxAngularSpeed;
 
+
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
@@ -128,6 +152,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
+
   /**
    * Sets the wheels into an X formation to prevent movement.
    */
@@ -137,6 +162,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
   }
+
 
   /**
    * Sets the swerve ModuleStates.
@@ -152,6 +178,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearRight.setDesiredState(desiredStates[3]);
   }
 
+
   /** Resets the drive encoders to currently read a position of 0. */
   public void resetEncoders() {
     m_frontLeft.resetEncoders();
@@ -160,10 +187,12 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearRight.resetEncoders();
   }
 
+
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
     m_gyro.reset();
   }
+
 
   /**
    * Returns the heading of the robot.
@@ -173,6 +202,7 @@ public class DriveSubsystem extends SubsystemBase {
   public double getHeading() {
     return Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)).getDegrees();
   }
+
 
   /**
    * Returns the turn rate of the robot.
