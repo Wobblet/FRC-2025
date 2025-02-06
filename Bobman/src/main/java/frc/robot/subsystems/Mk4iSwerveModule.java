@@ -86,6 +86,12 @@ public class Mk4iSwerveModule {
         new Rotation2d(m_turningEncoder.getPosition() - m_chassisAngularOffset));
   }
 
+  public SwerveModulePosition getInvertedPosition() {
+    return new SwerveModulePosition(
+      (m_drivingEncoder.getPosition()*-1),
+      new Rotation2d(m_turningEncoder.getPosition() - m_chassisAngularOffset));
+  }
+
   /**
    * Sets the desired state for the module.
    *

@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
+
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -51,7 +52,7 @@ public class DriveSubsystem extends SubsystemBase {
       new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
+          m_rearLeft.getInvertedPosition(),
           m_rearRight.getPosition()
       });
 
@@ -69,7 +70,7 @@ public class DriveSubsystem extends SubsystemBase {
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
-            m_rearLeft.getPosition(),
+            m_rearLeft.getInvertedPosition(),
             m_rearRight.getPosition()
         });
   }
@@ -94,7 +95,7 @@ public class DriveSubsystem extends SubsystemBase {
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
-            m_rearLeft.getPosition(),
+            m_rearLeft.getInvertedPosition(),
             m_rearRight.getPosition()
         },
         pose);
@@ -127,12 +128,21 @@ public class DriveSubsystem extends SubsystemBase {
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
                 Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)))
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
+
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
-    m_frontRight.setDesiredState(swerveModuleStates[1]);
-    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_frontRight.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
+
+    var swerveModuleStatesNew = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+        fieldRelative
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, (rotDelivered),
+                Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)))
+            : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered*-1)
+    );
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStatesNew, DriveConstants.kMaxSpeedMetersPerSecond);
+    m_rearLeft.setDesiredState(swerveModuleStatesNew[1]);
   }
 
   /**

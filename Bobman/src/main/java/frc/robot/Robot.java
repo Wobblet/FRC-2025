@@ -7,6 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.LimelightHelpers;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -50,6 +53,41 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
   }
 
+  double limelight_aim_proportional()
+  {
+    // kP (constant of proportionality)
+    // this is a hand-tuned number that determines the aggressiveness of our proportional control loop
+    // if it is too high, the robot will oscillate
+    // if it is too low, the robot will never reach its target
+    // if the robot never turn in the correct direction, kP should be inverted.
+    double kP = .035;
+
+    // tx ranges from (-hfov/2) to (hfov/2) in degrees. If your target is on the rightmost edge of 
+    // your limelight 3 feed, tx should return roughly 31 degrees.
+    double targetingAngularVelocity = LimelightHelpers.getTX("limelight") * kP;
+
+    // convert to radians per second for our drive method
+    targetingAngularVelocity *= DriveConstants.kMaxAngularSpeed;
+
+    // invert since tx is positive when the target is to the right of the crosshair
+    targetingAngularVelocity *= -1.0;
+
+    return targetingAngularVelocity;
+  } 
+  
+  // simple proportional ranging control with Limelight's "ty" value
+  // this works best if your Limelight's mount height and target mount height are different.
+  // if your limelight and target are mounted at the same or similar heights, use "ta" (area) for target ranging rather than "ty"
+ double limelight_range_proportional()
+ {
+  double kP = .1;
+  double targetingForwardSpeed = LimelightHelpers.getTY("limelight") * kP;
+  targetingForwardSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
+  targetingForwardSpeed *= -1.0;
+  return targetingForwardSpeed;
+ }
+
+
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {}
@@ -60,7 +98,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -70,9 +108,9 @@ public class Robot extends TimedRobot {
      */
 
     // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+    //if (m_autonomousCommand != null) {
+    //  m_autonomousCommand.schedule();
+    //}
   }
 
   /** This function is called periodically during autonomous. */

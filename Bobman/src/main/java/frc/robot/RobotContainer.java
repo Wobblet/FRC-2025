@@ -26,6 +26,8 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
 
+import frc.robot.subsystems.LimelightHelpers;
+
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -35,11 +37,12 @@ import java.util.List;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final LimelightHelpers m_LimelightHelpers = new LimelightHelpers();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
 
-  Joystick logicController = new Joystick(0);
+  Joystick logicController = new Joystick(1);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -58,7 +61,7 @@ public class RobotContainer {
             () -> m_robotDrive.drive(
                 -MathUtil.applyDeadband(logicController.getRawAxis(0), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(logicController.getRawAxis(1), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(logicController.getRawAxis(2), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(logicController.getRawAxis(4), OIConstants.kDriveDeadband),
                 true),
             m_robotDrive));
 
@@ -80,6 +83,8 @@ public class RobotContainer {
             () -> m_robotDrive.setX(),
             m_robotDrive));
 
+            
+
     //if (logicController.getRawAxis(1) > 0.5){
     //    new RunCommand(() -> m_robotDrive.drive(logicController.getRawAxis(1), 0, 0, false));
     //}
@@ -91,6 +96,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+
+  
   public Command getAutonomousCommand() {
     // Create config for trajectory
     TrajectoryConfig config = new TrajectoryConfig(
@@ -113,6 +120,7 @@ public class RobotContainer {
         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
+    
     SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
         exampleTrajectory,
         m_robotDrive::getPose, // Functional interface to feed supplier
@@ -125,10 +133,12 @@ public class RobotContainer {
         m_robotDrive::setModuleStates,
         m_robotDrive);
 
+    
     // Reset odometry to the starting pose of the trajectory.
     m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
 
     // Run path following command, then stop at the end.
     return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
   }
+  
 }
