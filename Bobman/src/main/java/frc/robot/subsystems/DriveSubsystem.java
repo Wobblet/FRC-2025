@@ -100,6 +100,13 @@ public class DriveSubsystem extends SubsystemBase {
         pose);
   }
 
+  public void resetAllEncoders(){
+    m_frontLeft.resetEncoders();
+    m_frontRight.resetEncoders();
+    m_rearLeft.resetEncoders();
+    m_rearRight.resetEncoders();
+  }
+
   /**
    * Method to drive the robot using joystick info.
    *

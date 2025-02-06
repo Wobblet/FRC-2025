@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
@@ -38,6 +39,8 @@ public class RobotContainer {
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
 
+  Joystick logicController = new Joystick(0);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -46,16 +49,20 @@ public class RobotContainer {
     configureButtonBindings();
 
     // Configure default commands
+    
+    /* */
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> m_robotDrive.drive(
-                -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(logicController.getRawAxis(0), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(logicController.getRawAxis(1), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(logicController.getRawAxis(2), OIConstants.kDriveDeadband),
                 true),
             m_robotDrive));
+
+    m_robotDrive.resetAllEncoders();
   }
 
   /**
@@ -68,10 +75,15 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kR1.value)
+    new JoystickButton(logicController, Button.kR1.value)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
+
+    //if (logicController.getRawAxis(1) > 0.5){
+    //    new RunCommand(() -> m_robotDrive.drive(logicController.getRawAxis(1), 0, 0, false));
+    //}
+
   }
 
   /**
