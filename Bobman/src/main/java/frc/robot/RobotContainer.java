@@ -2,7 +2,9 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+
 package frc.robot;
+
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -51,8 +53,11 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
+
     // Configure default commands
     
+    /* */
+   
     /* */
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
@@ -62,11 +67,15 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(logicController.getRawAxis(0), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(logicController.getRawAxis(1), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(logicController.getRawAxis(4), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(logicController.getRawAxis(0), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(logicController.getRawAxis(1), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(logicController.getRawAxis(4), OIConstants.kDriveDeadband),
                 true),
             m_robotDrive));
 
     m_robotDrive.resetAllEncoders();
   }
+
 
   /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -91,6 +100,7 @@ public class RobotContainer {
 
   }
 
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -106,6 +116,7 @@ public class RobotContainer {
         // Add kinematics to ensure max speed is actually obeyed
         .setKinematics(DriveConstants.kDriveKinematics);
 
+
     // An example trajectory to follow. All units in meters.
     Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
@@ -115,6 +126,7 @@ public class RobotContainer {
         // End 3 meters straight ahead of where we started, facing forward
         new Pose2d(3, 0, new Rotation2d(0)),
         config);
+
 
     var thetaController = new ProfiledPIDController(
         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
@@ -126,6 +138,7 @@ public class RobotContainer {
         m_robotDrive::getPose, // Functional interface to feed supplier
         DriveConstants.kDriveKinematics,
 
+
         // Position controllers
         new PIDController(AutoConstants.kPXController, 0, 0),
         new PIDController(AutoConstants.kPYController, 0, 0),
@@ -136,6 +149,7 @@ public class RobotContainer {
     
     // Reset odometry to the starting pose of the trajectory.
     m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
+
 
     // Run path following command, then stop at the end.
     return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
