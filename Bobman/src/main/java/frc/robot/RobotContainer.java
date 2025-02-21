@@ -17,6 +17,8 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -28,6 +30,9 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import frc.robot.subsystems.LimelightHelpers;
 
 /*
@@ -37,6 +42,8 @@ import frc.robot.subsystems.LimelightHelpers;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  private final SendableChooser<Command> autoChooser;
+
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final LimelightHelpers m_LimelightHelpers = new LimelightHelpers();
@@ -46,6 +53,7 @@ public class RobotContainer {
 
   Joystick logicController = new Joystick(1);
 
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -53,9 +61,12 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
+    autoChooser = AutoBuilder.buildAutoChooser();
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // Configure default commands
-    
+    boolean isCompetition = true;
     /* */
    
     /* */
@@ -102,7 +113,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
 
-  
+  /* 
   public Command getAutonomousCommand() {
     // Create config for trajectory
     TrajectoryConfig config = new TrajectoryConfig(
@@ -148,6 +159,14 @@ public class RobotContainer {
 
     // Run path following command, then stop at the end.
     return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
-  }
+  }*/
   
+  public Command getAutonomousCommand() {
+    // This method loads the auto when it is called, however, it is recommended
+    // to first load your paths/autos when code starts, then return the
+    // pre-loaded auto/path
+    return new PathPlannerAuto("New Auto");
+    //return autoChooser.getSelected();
+  }
+
 }
