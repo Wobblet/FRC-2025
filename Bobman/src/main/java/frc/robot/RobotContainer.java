@@ -66,14 +66,9 @@ public class RobotContainer {
             () -> m_robotDrive.drive(
                 -MathUtil.applyDeadband(logicController.getRawAxis(0), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(logicController.getRawAxis(1), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(logicController.getRawAxis(4), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(logicController.getRawAxis(0), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(logicController.getRawAxis(1), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(logicController.getRawAxis(4), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(logicController.getRawAxis(4)*-1, OIConstants.kDriveDeadband),
                 true),
             m_robotDrive));
-
-    m_robotDrive.resetAllEncoders();
   }
 
 

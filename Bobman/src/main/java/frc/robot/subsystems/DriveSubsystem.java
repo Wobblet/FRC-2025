@@ -59,7 +59,7 @@ public class DriveSubsystem extends SubsystemBase {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
           m_rearLeft.getInvertedPosition(),
-          m_rearRight.getPosition()
+          m_rearRight.getInvertedPosition() // changed getInvertedPosition to getPosition
       });
 
   /** Creates a new DriveSubsystem. */
@@ -112,7 +112,7 @@ public class DriveSubsystem extends SubsystemBase {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
             m_rearLeft.getInvertedPosition(),
-            m_rearRight.getPosition()
+            m_rearRight.getInvertedPosition() // Changed getInvertedPosition to getPosition
         });
   }
 
@@ -137,17 +137,11 @@ public class DriveSubsystem extends SubsystemBase {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
             m_rearLeft.getInvertedPosition(),
-            m_rearRight.getPosition()
+            m_rearRight.getInvertedPosition() // Changed getInvertedPosition to getPosition
         },
         pose);
   }
 
-  public void resetAllEncoders(){
-    m_frontLeft.resetEncoders();
-    m_frontRight.resetEncoders();
-    m_rearLeft.resetEncoders();
-    m_rearRight.resetEncoders();
-  }
 
   //public ChassisSpeeds getRobotRelativeSpeeds(){
   //  return ChassisSpeeds.fromFieldRelativeSpeeds(, ySpeedDelivered, getTurnRate(), Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)));
@@ -178,16 +172,17 @@ public class DriveSubsystem extends SubsystemBase {
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[2]);
+    m_rearLeft.setDesiredState(swerveModuleStates[1]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
 
-    var swerveModuleStatesNew = DriveConstants.kDriveKinematics.toSwerveModuleStates(
-        fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, (rotDelivered),
-                Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)))
-            : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered*-1)
-    );
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStatesNew, DriveConstants.kMaxSpeedMetersPerSecond);
-    m_rearLeft.setDesiredState(swerveModuleStatesNew[1]);
+    // var swerveModuleStatesNew = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+    //     fieldRelative
+    //         ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, (rotDelivered),
+    //             Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)))
+    //         : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered*-1)
+    // );
+    // SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStatesNew, DriveConstants.kMaxSpeedMetersPerSecond);
+    // m_rearLeft.setDesiredState(swerveModuleStatesNew[1]);
   }
 
   /**

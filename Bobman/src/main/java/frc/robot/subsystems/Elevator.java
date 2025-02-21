@@ -62,11 +62,11 @@ public class Elevator extends SubsystemBase {
     } 
   }
 
-  private double getPosition(){
+  double getPosition(){
     return (l1_Encoder.getPosition() + l2_Encoder.getPosition()) / 2.0;
   }
 
-  private double getInvertedPosition(){
+  double getInvertedPosition(){
     return ((l1_Encoder.getPosition() + l2_Encoder.getPosition()) / 2.0) * (-.1);
   }
 }
