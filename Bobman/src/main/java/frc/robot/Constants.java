@@ -33,6 +33,10 @@ public final class Constants {
     public static final double kMaxSpeedMetersPerSecond = 4.8;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
+    //Scoring Configs
+    public static final int bottomMotorID = 1;
+    public static final int topMotorID = 2;
+
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(20.75);
@@ -70,6 +74,8 @@ public final class Constants {
     public static final boolean kGyroReversed = false;
 
     public static RobotConfig config;
+
+    public static int modeValue = 0;
     
   }
 
@@ -124,7 +130,11 @@ public final class Constants {
   }
 
   public static final class ElevatorConstants {
-    public static final int limitSwitchHighID = 1;
-    public static final int limitSwitchLowID = 2;
+    public static final int elevatorLID = 1;
+    public static final int elevatorFID = 2;
+    public static final double elevatorPos1 = 1;
+    public static final double elevatorPos2 = 2;
+    public static final double elevatorPos3 = 3;
   }
+
 }

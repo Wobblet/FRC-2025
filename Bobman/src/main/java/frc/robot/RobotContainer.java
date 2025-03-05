@@ -53,6 +53,8 @@ public class RobotContainer {
 
   Joystick logicController = new Joystick(1);
 
+  
+
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -78,10 +80,11 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(logicController.getRawAxis(0), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(logicController.getRawAxis(1), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(logicController.getRawAxis(4)*-1, OIConstants.kDriveDeadband),
-                true),
+                true, DriveConstants.modeValue),
             m_robotDrive));
   }
 
+ 
 
   /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -93,11 +96,20 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(logicController, Button.kR1.value)
+    new JoystickButton(logicController, Button.kSquare.value)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
 
+    new JoystickButton(logicController, Button.kL1.value)
+        .whileTrue(new RunCommand(
+            () -> m_robotDrive.changeModeValue(1),
+            m_robotDrive));
+
+    new JoystickButton(logicController, Button.kR1.value)
+        .whileTrue(new RunCommand(
+            () -> m_robotDrive.changeModeValue(2),
+            m_robotDrive));
             
 
     //if (logicController.getRawAxis(1) > 0.5){

@@ -178,11 +178,25 @@ public class DriveSubsystem extends SubsystemBase {
    * @param fieldRelative Whether the provided x and y speeds are relative to the
    *                      field.
    */
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, int speedMode) {
     // Convert the commanded speeds into the correct units for the drivetrain
-    double xSpeedDelivered = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
-    double ySpeedDelivered = ySpeed * DriveConstants.kMaxSpeedMetersPerSecond;
-    double rotDelivered = rot * DriveConstants.kMaxAngularSpeed;
+    double xSpeedDelivered = 0;
+    double ySpeedDelivered = 0;
+    double rotDelivered = 0;
+    
+    if(speedMode == 0){
+      xSpeedDelivered = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+      ySpeedDelivered = ySpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+      rotDelivered = rot * DriveConstants.kMaxAngularSpeed;
+    }else if(speedMode == 1){
+      xSpeedDelivered = xSpeed * (DriveConstants.kMaxSpeedMetersPerSecond*.5);
+      ySpeedDelivered = ySpeed * (DriveConstants.kMaxSpeedMetersPerSecond*.5);
+      rotDelivered = rot * (DriveConstants.kMaxAngularSpeed*.5);
+    }else{
+      xSpeedDelivered = xSpeed * (DriveConstants.kMaxSpeedMetersPerSecond*.25);
+      ySpeedDelivered = ySpeed * (DriveConstants.kMaxSpeedMetersPerSecond*.25);
+      rotDelivered = rot * (DriveConstants.kMaxAngularSpeed*.25);
+    }
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
@@ -217,6 +231,11 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
   }
 
+  
+  public void changeModeValue(int value){
+    DriveConstants.modeValue = value;
+  }
+  
   /**
    * Sets the swerve ModuleStates.
    *
