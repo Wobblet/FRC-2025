@@ -18,7 +18,6 @@ public class ElevatorSubsystem extends SubsystemBase {
   private static SparkMax elevatorFollow = new SparkMax(ElevatorConstants.elevatorLID, MotorType.kBrushless);
   private static final AbsoluteEncoder elevatorEncoder = elevatorLead.getAbsoluteEncoder();
 
-  // 
   public ElevatorSubsystem() {
   }
 
